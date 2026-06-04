@@ -1,4 +1,27 @@
 // Utility Functions - Helper functions for the frontend
+
+/** API origin without /api suffix (for uploaded images in production over HTTPS). */
+export const getServerOrigin = () => {
+  if (process.env.REACT_APP_SERVER_URL) {
+    return process.env.REACT_APP_SERVER_URL.replace(/\/$/, '');
+  }
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL.replace(/\/api\/?$/, '');
+  }
+  if (process.env.NODE_ENV === 'production') {
+    return '';
+  }
+  return 'http://localhost:8000';
+};
+
+/** Resolve car/upload image paths for dev and production (avoids mixed-content on HTTPS). */
+export const getMediaUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const origin = getServerOrigin();
+  return `${origin}${path.startsWith('/') ? path : `/${path}`}`;
+};
+
 export const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',

@@ -4,7 +4,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import carService from '../services/bookingService';
 import { useAuth } from '../utils/useAuth';
-import { formatCurrency } from '../utils/helpers';
+import { formatCurrency, getMediaUrl } from '../utils/helpers';
 import './Auth.css';
 
 const BookingForm = () => {
@@ -201,7 +201,7 @@ const BookingForm = () => {
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
             {car.images && car.images.length > 0 && (
               <img
-                src={car.images[0].startsWith('http') ? car.images[0] : `http://localhost:5000${car.images[0]}`}
+                src={getMediaUrl(car.images[0])}
                 alt={car.name}
                 style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '0.5rem' }}
                 onError={(e) => {

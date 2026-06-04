@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import carService from '../services/bookingService';
-import { formatCurrency } from '../utils/helpers';
+import { formatCurrency, getMediaUrl } from '../utils/helpers';
 import { useAuth } from '../utils/useAuth';
 import './CarDetails.css';
 
@@ -61,7 +61,7 @@ const CarDetails = () => {
           <div className="main-image">
             {car.images && car.images.length > 0 ? (
               <img
-                src={car.images[selectedImageIndex].startsWith('http') ? car.images[selectedImageIndex] : `http://localhost:5000${car.images[selectedImageIndex]}`}
+                src={getMediaUrl(car.images[selectedImageIndex])}
                 alt={car.name}
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/600x400?text=Car+Image';
@@ -77,7 +77,7 @@ const CarDetails = () => {
               {car.images.map((image, index) => (
                 <img
                   key={index}
-                  src={image.startsWith('http') ? image : `http://localhost:5000${image}`}
+                  src={getMediaUrl(image)}
                   alt={`${car.name} ${index + 1}`}
                   className={`thumbnail ${index === selectedImageIndex ? 'active' : ''}`}
                   onClick={() => setSelectedImageIndex(index)}

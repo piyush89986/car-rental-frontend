@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import carService from '../services/bookingService';
-import { formatCurrency } from '../utils/helpers';
+import { formatCurrency, getMediaUrl } from '../utils/helpers';
 import './Home.css';
 
 const BookingHistory = () => {
@@ -170,9 +170,7 @@ const BookingHistory = () => {
                 {booking.carId?.images?.[0] && (
                   <div style={{ flexShrink: 0 }}>
                     <img 
-                      src={booking.carId.images[0].startsWith('http') 
-                        ? booking.carId.images[0] 
-                        : `http://localhost:5000${booking.carId.images[0]}`}
+                      src={getMediaUrl(booking.carId.images[0])}
                       alt={booking.carId.name}
                       style={{
                         width: '200px',
