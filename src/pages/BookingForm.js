@@ -84,12 +84,6 @@ const BookingForm = () => {
 
   // Calculate pricing whenever dates or insurance changes
   useEffect(() => {
-    if (car && car.rentPerDay) {
-      calculatePricing();
-    }
-  }, [formData.pickupDate, formData.dropoffDate, formData.insuranceSelected, car]);
-
-  const calculatePricing = () => {
     if (!car || !car.rentPerDay) return;
 
     const costBreakdown = carService.calculateBookingCost(
@@ -100,7 +94,7 @@ const BookingForm = () => {
     );
 
     setPricing(costBreakdown);
-  };
+  }, [formData.pickupDate, formData.dropoffDate, formData.insuranceSelected, car]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

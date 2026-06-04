@@ -1,5 +1,5 @@
 // Manage Cars - Admin page to view and manage all cars
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import carService from '../services/bookingService';
@@ -16,18 +16,14 @@ const ManageCars = () => {
     seatingCapacity: '',
   });
 
-  useEffect(() => {
-    fetchCars();
-  }, [filters]);
-
-  const fetchCars = async () => {
+  const fetchCars = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await carService.getAllCars({
         ...filters,
         limit: 1000,
       });
-      
+
       if (response.data) {
         setCars(response.data);
       }
@@ -37,7 +33,11 @@ const ManageCars = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    fetchCars();
+  }, [fetchCars]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

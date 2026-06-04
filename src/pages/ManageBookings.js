@@ -1,5 +1,5 @@
 // Manage Bookings - Admin panel for managing all bookings
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
@@ -15,11 +15,7 @@ const ManageBookings = () => {
   const [newStatus, setNewStatus] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
 
-  useEffect(() => {
-    fetchBookings();
-  }, [statusFilter]);
-
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       setIsLoading(true);
       const params = statusFilter ? `?status=${statusFilter}` : '?limit=100';
@@ -31,7 +27,11 @@ const ManageBookings = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [statusFilter]);
+
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
 
   const handleUpdateStatus = async () => {
     if (!newStatus) {

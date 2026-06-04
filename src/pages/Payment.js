@@ -25,45 +25,45 @@ const Payment = () => {
   });
 
   useEffect(() => {
-    fetchBookingDetails();
-  }, [bookingId]);
+    const fetchBookingDetails = async () => {
+      try {
+        setIsLoading(true);
+        const response = await carService.getBookingById(bookingId);
 
-  const fetchBookingDetails = async () => {
-    try {
-      setIsLoading(true);
-      const response = await carService.getBookingById(bookingId);
-      
-      if (response.success) {
-        const bookingData = response.data;
-        
-        // Check if payment is already completed
-        if (bookingData.paymentStatus === 'Completed') {
-          toast.info('Payment already completed for this booking');
-          setTimeout(() => navigate(`/bookings/${bookingId}`), 2000);
-          return;
+        if (response.success) {
+          const bookingData = response.data;
+
+          // Check if payment is already completed
+          if (bookingData.paymentStatus === 'Completed') {
+            toast.info('Payment already completed for this booking');
+            setTimeout(() => navigate(`/bookings/${bookingId}`), 2000);
+            return;
+          }
+
+          // Check if booking is cancelled
+          if (bookingData.status === 'Cancelled') {
+            toast.error('Cannot process payment for cancelled booking');
+            setTimeout(() => navigate(`/bookings/${bookingId}`), 2000);
+            return;
+          }
+
+          setBooking(bookingData);
+          setPaymentData(prev => ({
+            ...prev,
+            paymentMethod: bookingData.paymentMethod || 'Credit Card',
+          }));
         }
-
-        // Check if booking is cancelled
-        if (bookingData.status === 'Cancelled') {
-          toast.error('Cannot process payment for cancelled booking');
-          setTimeout(() => navigate(`/bookings/${bookingId}`), 2000);
-          return;
-        }
-
-        setBooking(bookingData);
-        setPaymentData(prev => ({
-          ...prev,
-          paymentMethod: bookingData.paymentMethod || 'Credit Card',
-        }));
+      } catch (error) {
+        console.error('Fetch booking error:', error);
+        toast.error(error.response?.data?.message || 'Failed to load booking details');
+        setTimeout(() => navigate('/bookings'), 2000);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Fetch booking error:', error);
-      toast.error(error.response?.data?.message || 'Failed to load booking details');
-      setTimeout(() => navigate('/bookings'), 2000);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
+
+    fetchBookingDetails();
+  }, [bookingId, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

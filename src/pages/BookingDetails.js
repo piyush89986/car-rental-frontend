@@ -1,5 +1,5 @@
 // Booking Details - Display detailed information about a specific booking
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import carService from '../services/bookingService';
@@ -13,15 +13,11 @@ const BookingDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isCancelling, setIsCancelling] = useState(false);
 
-  useEffect(() => {
-    fetchBookingDetails();
-  }, [bookingId]);
-
-  const fetchBookingDetails = async () => {
+  const fetchBookingDetails = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await carService.getBookingById(bookingId);
-      
+
       if (response.success) {
         setBooking(response.data);
       }
@@ -32,7 +28,11 @@ const BookingDetails = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [bookingId, navigate]);
+
+  useEffect(() => {
+    fetchBookingDetails();
+  }, [fetchBookingDetails]);
 
   const handleCancelBooking = async () => {
     const reason = prompt('Please provide a reason for cancellation (optional):');

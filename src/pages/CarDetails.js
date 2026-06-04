@@ -15,21 +15,21 @@ const CarDetails = () => {
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
+    const fetchCarDetails = async () => {
+      try {
+        setIsLoading(true);
+        const response = await carService.getCarById(carId);
+        setCar(response.car);
+      } catch (error) {
+        toast.error('Failed to load car details');
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchCarDetails();
   }, [carId]);
-
-  const fetchCarDetails = async () => {
-    try {
-      setIsLoading(true);
-      const response = await carService.getCarById(carId);
-      setCar(response.car);
-    } catch (error) {
-      toast.error('Failed to load car details');
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   if (isLoading) {
     return (

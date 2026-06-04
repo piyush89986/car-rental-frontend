@@ -20,21 +20,21 @@ const Home = () => {
   });
 
   useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        setIsLoading(true);
+        const response = await carService.getAllCars(filters);
+        setCars(response.data || []);
+      } catch (error) {
+        toast.error('Failed to load cars');
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchCars();
   }, [filters]);
-
-  const fetchCars = async () => {
-    try {
-      setIsLoading(true);
-      const response = await carService.getAllCars(filters);
-      setCars(response.data || []);
-    } catch (error) {
-      toast.error('Failed to load cars');
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
