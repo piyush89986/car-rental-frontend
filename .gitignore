@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+.env
+
+# Build Files
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage
+coverage/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.vscode/
+.idea/
+
+# Temporary Files
+tmp/
+temp/
+
+# Mac System Files
+.AppleDouble
+.LSOverride
