@@ -1,9 +1,14 @@
 // API Service Configuration - Axios instance for API calls
 import axios from 'axios';
 
-const API_BASE_URL =
-  process.env.REACT_APP_API_URL ||
-  (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8000/api');
+const resolveApiBaseUrl = () => {
+  const fallback =
+    process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8000/api';
+  const raw = (process.env.REACT_APP_API_URL || fallback).trim().replace(/\/$/, '');
+  return raw.endsWith('/api') ? raw : `${raw}/api`;
+};
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 // Create axios instance
 const api = axios.create({
